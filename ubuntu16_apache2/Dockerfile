@@ -1,8 +1,9 @@
 FROM ubuntu
-MAINTAINER minh.tran@harveynash.vn
+MAINTAINER minh.tran@nashtechglobal.com
 
 # Setup apache2
 RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get -y install \
+	apt-utils \
 	apache2 \
 	php7.0 \
 	php7.0-common \
@@ -21,32 +22,34 @@ RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-g
 	lynx-cur \
 	git \
 	unzip \
-	npm
+	python
 	
+# Alway get new node
+RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
+RUN apt-get install -y nodejs
 	
 # Enable apache mods.
-RUN a2enmod php7.0
-RUN a2enmod rewrite
+RUN a2enmod php7.0 \
+	&& a2enmod rewrite
 
 COPY info.php /var/www/html
 
 # Update composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+	# Install gulp
+	&& npm install --global gulp-cli
 
-# Install gulp
-RUN npm install --global gulp-cli
-
-# node and nodejs
-RUN ln -s /usr/bin/nodejs /usr/bin/node
+	# node and nodejs
+	#&& ln -s /usr/bin/nodejs /usr/bin/node
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Manually set up the apache environment variables
-ENV APACHE_RUN_USER www-data
-ENV APACHE_RUN_GROUP www-data
-ENV APACHE_LOG_DIR /var/log/apache2
-ENV APACHE_LOCK_DIR /var/lock/apache2
-ENV APACHE_PID_FILE /var/run/apache2.pid
+ENV APACHE_RUN_USER www-data \
+	APACHE_RUN_GROUP www-data \
+	APACHE_LOG_DIR /var/log/apache2 \
+	APACHE_LOCK_DIR /var/lock/apache2 \
+	APACHE_PID_FILE /var/run/apache2.pid
 
 # Expose apache.
 EXPOSE 80
