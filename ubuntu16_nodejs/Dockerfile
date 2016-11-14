@@ -12,7 +12,8 @@ RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-g
 	default-jre
 	
 # Alway get new node
-RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
+
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 
 # Create code folder
