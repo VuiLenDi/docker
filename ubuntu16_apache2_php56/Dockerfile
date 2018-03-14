@@ -1,37 +1,29 @@
 FROM ubuntu
 MAINTAINER minh.tran@nashtechglobal.com
 
-# Update some needed package
-RUN apt-get update && apt-get -y upgrade \
+# Setup apache2
+RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get -y install \
 	apt-utils \
 	software-properties-common \
-	python-software-properties \
-	&& apt-get update \
 	&& LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php \
-	&& apt-get update
-	
-# Install postfix, that's required
-RUN echo "postfix postfix/mailname string tranminh.vuilendi.com" | debconf-set-selections \
-	&& echo "postfix postfix/main_mailer_type string 'Local Only'" | debconf-set-selections \
-	&& DEBIAN_FRONTEND=noninteractive apt-get -y install \
+	&& apt-get update && apt-get -y install \
 	nano \
-	putty \
-	apache2 \	
-	php7.2 \
-	php7.2-cli \
-	php7.2-common \
-	php7.2-gd \
-	php7.2-mysql \	
-	php7.2-curl \
-	php7.2-intl \
-	php7.2-xsl \
-	php7.2-mbstring \
-	php7.2-zip \
-	php7.2-bcmath \
-	php7.2-tidy \
-	libapache2-mod-php7.2 \
-	libapache2-modsecurity \
-	libapache2-mod-evasive \
+	apache2 \
+	
+	php5.6 \
+	php5.6-common \
+	php5.6-gd \
+	php5.6-mysql \
+	php5.6-mcrypt \
+	php5.6-curl \
+	php5.6-intl \
+	php5.6-xsl \
+	php5.6-mbstring \
+	php5.6-zip \
+	php5.6-bcmath \
+	php5.6-iconv \
+	php5.6-tidy \
+	libapache2-mod-php5.6 \
 		
 	curl \
 	lynx-cur \
@@ -40,11 +32,14 @@ RUN echo "postfix postfix/mailname string tranminh.vuilendi.com" | debconf-set-s
 	python
 	
 # Alway get new node
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 
+# Install bower
+RUN npm install -g bower
+	
 # Enable apache mods.
-RUN a2enmod php7.2 \
+RUN a2enmod php5.6 \
 	&& a2enmod rewrite
 
 COPY info.php /var/www/html
