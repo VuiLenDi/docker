@@ -37,12 +37,13 @@ RUN echo "postfix postfix/mailname string tranminh.vuilendi.com" | debconf-set-s
 	lynx-cur \
 	git \
 	unzip \
-	python
+	python \
+	wget
 	
 # Copy Owasp Security
-RUN wget -o /tmp/master https://github.com/SpiderLabs/owasp-modsecurity-crs/tarball/master \ 
-	&& tar -xvf /tmp/master -C /tmp
-	&& cp /tmp/SpiderLabs-owasp-modsecurity-crs-56cad3a/modsecurity_crs_10_setup.conf.example /etc/modsecurity/modsecurity_crs_10_setup.conf
+RUN wget -O /tmp/master https://github.com/SpiderLabs/owasp-modsecurity-crs/tarball/master
+RUN tar -xvf /tmp/master -C /tmp \
+	&& cp /tmp/SpiderLabs-owasp-modsecurity-crs-56cad3a/modsecurity_crs_10_setup.conf.example /etc/modsecurity/modsecurity_crs_10_setup.conf \
 	
 	# Configure mod security
 	&& cp /etc/modsecurity/modsecurity.conf-recommended /etc/modsecurity/modsecurity.conf
@@ -55,7 +56,7 @@ RUN apt-get install -y nodejs
 
 # Enable apache mods.
 RUN a2enmod php7.2 \
-	&& a2enmod rewrite
+	&& a2enmod rewrite \
 	&& a2enmod headers
 
 COPY info.php /var/www/html
