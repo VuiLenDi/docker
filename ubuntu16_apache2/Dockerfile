@@ -39,6 +39,16 @@ RUN echo "postfix postfix/mailname string tranminh.vuilendi.com" | debconf-set-s
 	unzip \
 	python
 	
+# Copy Owasp Security
+RUN wget -o /tmp/master https://github.com/SpiderLabs/owasp-modsecurity-crs/tarball/master \ 
+	&& tar -xvf /tmp/master -C /tmp
+	&& cp /tmp/SpiderLabs-owasp-modsecurity-crs-56cad3a/modsecurity_crs_10_setup.conf.example /etc/modsecurity/modsecurity_crs_10_setup.conf
+	
+	# Configure mod security
+	&& cp /etc/modsecurity/modsecurity.conf-recommended /etc/modsecurity/modsecurity.conf
+	
+COPY security.conf /etc/apache2/conf-available/security.conf
+	
 # Alway get new node
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install -y nodejs
@@ -46,6 +56,7 @@ RUN apt-get install -y nodejs
 # Enable apache mods.
 RUN a2enmod php7.2 \
 	&& a2enmod rewrite
+	&& a2enmod headers
 
 COPY info.php /var/www/html
 
