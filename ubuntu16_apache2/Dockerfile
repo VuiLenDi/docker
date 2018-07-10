@@ -1,5 +1,5 @@
-FROM ubuntu
-MAINTAINER minh.tran@nashtechglobal.com
+FROM ubuntu:16.04
+MAINTAINER vuilendi@gmail.com
 
 # Update some needed package
 RUN apt-get update && apt-get -y upgrade \

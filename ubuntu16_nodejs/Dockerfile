@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:16.04
 MAINTAINER vuilendi@gmail.com
 
 RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get -y install \
