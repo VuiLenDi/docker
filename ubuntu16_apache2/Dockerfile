@@ -4,8 +4,7 @@ MAINTAINER minh.tran@nashtechglobal.com
 # Update some needed package
 RUN apt-get update && apt-get -y upgrade \
 	apt-utils \
-	software-properties-common \
-	python-software-properties \
+	software-properties-common \	
 	&& apt-get update \
 	&& LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php \
 	&& apt-get update
@@ -14,6 +13,7 @@ RUN apt-get update && apt-get -y upgrade \
 RUN echo "postfix postfix/mailname string tranminh.vuilendi.com" | debconf-set-selections \
 	&& echo "postfix postfix/main_mailer_type string 'Local Only'" | debconf-set-selections \
 	&& DEBIAN_FRONTEND=noninteractive apt-get -y install \
+	python-software-properties \
 	nano \
 	putty \
 	apache2 \	
@@ -32,7 +32,9 @@ RUN echo "postfix postfix/mailname string tranminh.vuilendi.com" | debconf-set-s
 	libapache2-mod-php7.2 \
 	libapache2-modsecurity \
 	libapache2-mod-evasive \
-		
+	gcc \
+	g++ \
+	make \
 	curl \
 	lynx-cur \
 	git \
@@ -44,15 +46,17 @@ RUN echo "postfix postfix/mailname string tranminh.vuilendi.com" | debconf-set-s
 RUN wget -O /tmp/master https://github.com/SpiderLabs/owasp-modsecurity-crs/tarball/master
 RUN tar -xvf /tmp/master -C /tmp \
 	&& cp /tmp/SpiderLabs-owasp-modsecurity-crs-56cad3a/modsecurity_crs_10_setup.conf.example /etc/modsecurity/modsecurity_crs_10_setup.conf \
-	
 	# Configure mod security
 	&& cp /etc/modsecurity/modsecurity.conf-recommended /etc/modsecurity/modsecurity.conf
 	
 COPY security.conf /etc/apache2/conf-available/security.conf
-	
+
 # Alway get new node
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install -y nodejs
+
+# Install node gyp
+RUN apt-get install -y node-gyp
 
 # Enable apache mods.
 RUN a2enmod php7.2 \
