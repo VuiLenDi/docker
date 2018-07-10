@@ -43,7 +43,7 @@ RUN echo "postfix postfix/mailname string tranminh.vuilendi.com" | debconf-set-s
 	wget
 	
 # Copy Owasp Security
-RUN wget -O /tmp/master https://github.com/SpiderLabs/owasp-modsecurity-crs/tarball/master
+RUN wget -O /tmp/master https://github.com/SpiderLabs/owasp-modsecurity-crs/tarball/master --no-check-certificate
 RUN tar -xvf /tmp/master -C /tmp \
 	&& cp /tmp/SpiderLabs-owasp-modsecurity-crs-56cad3a/modsecurity_crs_10_setup.conf.example /etc/modsecurity/modsecurity_crs_10_setup.conf \
 	# Configure mod security
